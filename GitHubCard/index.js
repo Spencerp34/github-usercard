@@ -1,8 +1,35 @@
+import axios from 'axios'
+
 /*
   STEP 1: using axios, send a GET request to the following URL
     (replacing the placeholder with your Github name):
     https://api.github.com/users/<your name>
 */
+
+const followersArray = [];
+followersArray.push('Spencerp34')
+followersArray.push('tetondan')
+followersArray.push('dustinmyers')
+followersArray.push('justsml')
+followersArray.push('luishrd')
+followersArray.push('bigknell')
+
+
+const allCards = followersArray.forEach( (item) =>
+  axios
+    .get(`https://api.github.com/users/${item}`)
+    .then((res) => {
+      const userInfo = res.data
+        const finishedProduct = cardMaker({ avatar_url: userInfo.avatar_url, name: userInfo.name, login: userInfo.login, location: userInfo.location, html_url: userInfo.html_url, followers: userInfo.followers, following: userInfo.following, bio: userInfo.bio})
+        document.querySelector('.cards').appendChild(finishedProduct)
+        // console.log(finishedProduct)
+
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+)
+
 
 /*
   STEP 2: Inspect and study the data coming back, this is YOUR
@@ -28,7 +55,51 @@
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+
+
+function cardMaker ({avatar_url, name, login, location, html_url, followers, following, bio}){
+  const userCard = document.createElement('div')
+  userCard.classList.add('card')
+  const profilePic = document.createElement('img')
+  const cardInfo = document.createElement('div')
+  cardInfo.classList.add('card-info')
+  const nameText = document.createElement('h3')
+  nameText.classList.add('name')
+  const userNameText = document.createElement('p')
+  userNameText.classList.add('username')
+  const locationText = document.createElement('p')
+  const profileText = document.createElement('p')
+  const profileLink = document.createElement('a')
+  const follwersText = document.createElement('p')
+  const followingText = document.createElement('p')
+  const bioText = document.createElement('p')
+
+  profilePic.src = avatar_url
+  nameText.textContent = name
+  userNameText.textContent = login
+  locationText.textContent = location
+  profileText.textContent = `Profile: `
+  profileLink.textContent = ` ${html_url}`
+  profileLink.href = html_url
+  follwersText.textContent = `Followers: ${followers}`;
+  followingText.textContent = `Following: ${following}`;
+  bioText.textContent = bio 
+
+  document.querySelector('.cards').appendChild(userCard)
+  userCard.appendChild(profilePic)
+  userCard.appendChild(cardInfo)
+  cardInfo.appendChild(nameText)
+  cardInfo.appendChild(userNameText)
+  cardInfo.appendChild(locationText)
+  cardInfo.appendChild(profileText)
+  profileText.appendChild(profileLink)
+  cardInfo.appendChild(follwersText)
+  cardInfo.appendChild(followingText)
+  cardInfo.appendChild(bioText)
+
+  return userCard
+}
+
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
